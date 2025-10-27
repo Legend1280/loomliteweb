@@ -104,3 +104,18 @@
 - [x] Each node should connect to multiple nearby nodes (not just adjacent)
 - [x] Maintain diagonal flow across screen
 
+
+
+## Content Updates
+- [x] Update glow highlights to only "structure" and "everything" in hero
+- [x] Update demo link to https://loomlite.vercel.app
+- [x] Add email link to brady@moped.com
+
+
+
+## Button Styling
+- [x] Make buttons more elegant and minimal
+- [x] Reduce border thickness and padding
+- [x] Use lighter font weights
+- [x] Subtle hover effects
+

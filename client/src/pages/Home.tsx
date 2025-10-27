@@ -80,9 +80,9 @@ export default function Home() {
             className="text-5xl md:text-7xl font-light tracking-tight leading-tight"
             variants={fadeInUp}
           >
-            <span className="glow-text">Structure the unstructured.</span>
+            Structure the <span className="glow-text">unstructured</span>.
             <br />
-            <span className="glow-text">Understand everything.</span>
+            Understand <span className="glow-text">everything</span>.
           </motion.h1>
           <motion.p 
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed"
@@ -94,12 +94,16 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
             variants={fadeInUp}
           >
-            <Button size="lg" className="text-base px-8 py-6 font-normal">
-              See the Demo
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button size="lg" className="text-sm px-6 py-3 font-light border-[0.5px] hover:bg-primary/90 transition-all" asChild>
+              <a href="https://loomlite.vercel.app" target="_blank" rel="noopener noreferrer">
+                See the Demo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
             </Button>
-            <Button size="lg" variant="outline" className="text-base px-8 py-6 font-normal">
-              Request Enterprise Access
+            <Button size="lg" variant="outline" className="text-sm px-6 py-3 font-light border-[0.5px] hover:bg-accent/10 transition-all" asChild>
+              <a href="mailto:brady@moped.com">
+                Request Enterprise Access
+              </a>
             </Button>
           </motion.div>
         </div>
