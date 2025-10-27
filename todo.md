@@ -32,3 +32,11 @@
 - [x] Tablet breakpoints
 - [x] Desktop optimization
 
+
+
+## Design Refinements
+- [x] Reduce font weights for more minimal look
+- [x] Increase negative space and spacing between sections
+- [x] Lighter font weights for headings
+- [x] More breathing room in layout
+
