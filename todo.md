@@ -81,3 +81,8 @@
 - [x] Remove full-background coverage
 - [x] Create 2-3 diagonal fabric streams that appear between content sections
 
+
+
+## Bugs
+- [x] Fabric streams not visible - debug and fix rendering issue
+
