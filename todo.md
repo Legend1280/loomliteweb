@@ -96,3 +96,11 @@
 - [x] Ensure streams flow off the page edges
 - [x] Increase node count for longer, more visible streams
 
+
+
+## Fabric Lattice Enhancement
+- [x] Add more branching connections between nodes
+- [x] Create lattice/woven fabric pattern with dense interconnections
+- [x] Each node should connect to multiple nearby nodes (not just adjacent)
+- [x] Maintain diagonal flow across screen
+

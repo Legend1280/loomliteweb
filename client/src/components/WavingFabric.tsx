@@ -28,7 +28,7 @@ export default function WavingFabric() {
 
     const createDiagonalStream = (startX: number, startY: number, length: number, angle: number) => {
       const nodes: Node[] = [];
-      const nodeCount = 18; // More nodes for longer streams
+      const nodeCount = 18;
       const spacing = length / nodeCount;
 
       for (let i = 0; i < nodeCount; i++) {
@@ -51,24 +51,20 @@ export default function WavingFabric() {
       const w = canvas.width;
       const h = canvas.height;
       
-      // Only 2 streams positioned in negative space
-      
-      // Stream 1: Bottom-right area, 30% down from top, flowing diagonally off-screen
-      // Positioned in the negative space on the right side
+      // Stream 1: Bottom-right area, flowing diagonally
       streams.push(createDiagonalStream(
-        w * 0.65,           // Start 65% from left (right side)
-        h * 0.3,            // 30% down from top
-        900,                // Longer stream
-        Math.PI * 0.35      // Diagonal angle flowing down-right
+        w * 0.65,
+        h * 0.3,
+        900,
+        Math.PI * 0.35
       ));
       
-      // Stream 2: Left-middle area, flowing diagonally across negative space
-      // Positioned to flow through left side negative space
+      // Stream 2: Left-middle area, flowing diagonally
       streams.push(createDiagonalStream(
-        w * 0.05,           // Start near left edge
-        h * 0.55,           // Middle-lower area
-        800,                // Long stream
-        Math.PI * 0.15      // Gentle diagonal flowing right
+        w * 0.05,
+        h * 0.55,
+        800,
+        Math.PI * 0.15
       ));
     };
 
@@ -89,30 +85,25 @@ export default function WavingFabric() {
           node.y = node.baseY + Math.cos(i * 0.25 + time) * 12;
         });
 
-        // Draw connections between adjacent nodes
-        for (let i = 0; i < stream.length - 1; i++) {
+        // Draw lattice connections - each node connects to multiple nearby nodes
+        for (let i = 0; i < stream.length; i++) {
           const node = stream[i];
-          const nextNode = stream[i + 1];
 
-          ctx.beginPath();
-          ctx.moveTo(node.x, node.y);
-          ctx.lineTo(nextNode.x, nextNode.y);
-          ctx.strokeStyle = `rgba(252, 211, 77, 0.35)`;
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
+          // Connect to all nodes within connection radius (creates lattice/fabric effect)
+          for (let j = 0; j < stream.length; j++) {
+            if (i === j) continue;
 
-          // Connect to nearby nodes for triangulation
-          for (let j = i + 2; j < Math.min(i + 4, stream.length); j++) {
-            const nearNode = stream[j];
-            const dx = nearNode.x - node.x;
-            const dy = nearNode.y - node.y;
+            const otherNode = stream[j];
+            const dx = otherNode.x - node.x;
+            const dy = otherNode.y - node.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < 140) {
-              const opacity = (1 - distance / 140) * 0.2;
+            // Connect nodes within 180px radius for dense lattice
+            if (distance < 180) {
+              const opacity = (1 - distance / 180) * 0.25;
               ctx.beginPath();
               ctx.moveTo(node.x, node.y);
-              ctx.lineTo(nearNode.x, nearNode.y);
+              ctx.lineTo(otherNode.x, otherNode.y);
               ctx.strokeStyle = `rgba(252, 211, 77, ${opacity})`;
               ctx.lineWidth = 1;
               ctx.stroke();
@@ -120,19 +111,19 @@ export default function WavingFabric() {
           }
         }
 
-        // Draw nodes
+        // Draw nodes on top of connections
         stream.forEach((node) => {
           // Main node
           ctx.beginPath();
           ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(252, 211, 77, 0.8)`;
+          ctx.fillStyle = `rgba(252, 211, 77, 0.85)`;
           ctx.fill();
 
           // Larger nodes get rings
           if (node.size > 4) {
             ctx.beginPath();
             ctx.arc(node.x, node.y, node.size + 4, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(252, 211, 77, 0.35)`;
+            ctx.strokeStyle = `rgba(252, 211, 77, 0.4)`;
             ctx.lineWidth = 1.5;
             ctx.stroke();
           }
