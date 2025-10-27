@@ -50,3 +50,8 @@
 - [x] Ensure it stays in backdrop (behind content)
 - [x] Make it subtle and fade in/out organically
 
+
+
+## Bug Fixes
+- [x] Increase visibility of fabric background effect (currently too subtle/invisible)
+
