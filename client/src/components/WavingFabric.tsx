@@ -1,76 +1,150 @@
+import { useEffect, useRef } from 'react';
+
+interface Node {
+  x: number;
+  y: number;
+  size: number;
+  baseX: number;
+  baseY: number;
+}
+
 export default function WavingFabric() {
-  return (
-    <div 
-      className="fixed inset-0 pointer-events-none opacity-20"
-      style={{ zIndex: 0 }}
-    >
-      {/* Animated grid pattern */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(252, 211, 77, 0.4) 2px, transparent 2px),
-            linear-gradient(90deg, rgba(252, 211, 77, 0.4) 2px, transparent 2px)
-          `,
-          backgroundSize: '80px 80px',
-          animation: 'gridFlow 20s linear infinite',
-        }}
-      />
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = document.documentElement.scrollHeight;
+      initStreams();
+    };
+
+    let streams: Node[][] = [];
+
+    const createDiagonalStream = (startX: number, startY: number, length: number, angle: number) => {
+      const nodes: Node[] = [];
+      const nodeCount = 15;
+      const spacing = length / nodeCount;
+
+      for (let i = 0; i < nodeCount; i++) {
+        const progress = i / nodeCount;
+        const x = startX + Math.cos(angle) * spacing * i + (Math.random() - 0.5) * 40;
+        const y = startY + Math.sin(angle) * spacing * i + (Math.random() - 0.5) * 40;
+        
+        nodes.push({
+          x,
+          y,
+          size: Math.random() * 3 + 2,
+          baseX: x,
+          baseY: y,
+        });
+      }
+      return nodes;
+    };
+
+    const initStreams = () => {
+      streams = [];
+      const height = canvas.height;
       
-      {/* Animated dots at intersections */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `radial-gradient(circle, rgba(252, 211, 77, 1) 4px, transparent 4px)`,
-          backgroundSize: '80px 80px',
-          animation: 'dotPulse 3s ease-in-out infinite, gridFlow 20s linear infinite',
-        }}
-      />
+      // Create 3 diagonal streams at different positions
+      // Stream 1: Top right to middle left
+      streams.push(createDiagonalStream(canvas.width * 0.8, height * 0.15, 800, Math.PI * 0.75));
+      
+      // Stream 2: Middle left to bottom right
+      streams.push(createDiagonalStream(canvas.width * 0.1, height * 0.4, 900, Math.PI * 0.25));
+      
+      // Stream 3: Top left to middle right
+      streams.push(createDiagonalStream(canvas.width * 0.2, height * 0.65, 700, Math.PI * 0.15));
+    };
 
-      {/* Flowing yellow waves */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 700px 500px at 20% 50%, rgba(252, 211, 77, 0.3) 0%, transparent 50%),
-            radial-gradient(ellipse 600px 600px at 80% 30%, rgba(252, 211, 77, 0.25) 0%, transparent 50%)
-          `,
-          animation: 'waveFlow 15s ease-in-out infinite',
-        }}
-      />
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-      <style>{`
-        @keyframes gridFlow {
-          0% {
-            transform: translate(0, 0);
-          }
-          100% {
-            transform: translate(80px, 80px);
+    let time = 0;
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      time += 0.02;
+
+      streams.forEach((stream) => {
+        // Update node positions with wave
+        stream.forEach((node, i) => {
+          const wave = Math.sin(i * 0.3 + time) * 15;
+          node.x = node.baseX + wave;
+          node.y = node.baseY + Math.cos(i * 0.2 + time) * 10;
+        });
+
+        // Draw connections
+        for (let i = 0; i < stream.length - 1; i++) {
+          const node = stream[i];
+          const nextNode = stream[i + 1];
+
+          // Connect to next node in stream
+          ctx.beginPath();
+          ctx.moveTo(node.x, node.y);
+          ctx.lineTo(nextNode.x, nextNode.y);
+          ctx.strokeStyle = `rgba(252, 211, 77, 0.3)`;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // Connect to nearby nodes in same stream
+          for (let j = i + 2; j < Math.min(i + 4, stream.length); j++) {
+            const nearNode = stream[j];
+            const dx = nearNode.x - node.x;
+            const dy = nearNode.y - node.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 120) {
+              const opacity = (1 - distance / 120) * 0.2;
+              ctx.beginPath();
+              ctx.moveTo(node.x, node.y);
+              ctx.lineTo(nearNode.x, nearNode.y);
+              ctx.strokeStyle = `rgba(252, 211, 77, ${opacity})`;
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
           }
         }
 
-        @keyframes dotPulse {
-          0%, 100% {
-            opacity: 0.6;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
+        // Draw nodes
+        stream.forEach((node) => {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(252, 211, 77, 0.7)`;
+          ctx.fill();
 
-        @keyframes waveFlow {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
+          // Larger nodes get rings
+          if (node.size > 4) {
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.size + 4, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(252, 211, 77, 0.3)`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
           }
-          33% {
-            transform: translate(-10%, 5%) scale(1.1);
-          }
-          66% {
-            transform: translate(10%, -5%) scale(0.9);
-          }
-        }
-      `}</style>
-    </div>
+        });
+      });
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none opacity-30"
+      style={{ zIndex: 0 }}
+    />
   );
 }
 

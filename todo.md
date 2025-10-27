@@ -63,3 +63,21 @@
 - [x] Add flowing animation to the fabric
 - [x] Ensure it's apparent in the background
 
+
+
+## Fabric Redesign - Organic Network
+- [x] Replace grid with randomly positioned nodes
+- [x] Create triangulated connections between nodes (Delaunay-style)
+- [x] Vary node sizes (some larger, some smaller)
+- [x] Make connections form triangular/irregular patterns
+- [x] Keep yellow color scheme with subtle animation
+
+
+
+## Fabric Flow Redesign
+- [x] Change fabric to flow diagonally across page (like crossing a road)
+- [x] Place fabric only in select areas/negative space
+- [x] Use fabric to connect sections as visual bridges
+- [x] Remove full-background coverage
+- [x] Create 2-3 diagonal fabric streams that appear between content sections
+
