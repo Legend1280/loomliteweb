@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import WavingFabric from "@/components/WavingFabric";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
@@ -65,7 +66,8 @@ export default function Home() {
   const ctaSection = useInView();
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+      <WavingFabric />
       {/* Hero Section */}
       <motion.section 
         className="container py-32 md:py-48"

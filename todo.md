@@ -40,3 +40,13 @@
 - [x] Lighter font weights for headings
 - [x] More breathing room in layout
 
+
+
+## Animated Fabric Background
+- [x] Create 3D geometric mesh/fabric background
+- [x] Implement wave animation that undulates across the canvas
+- [x] Add visibility threshold (parts below "water line" disappear)
+- [x] Apply yellow/gray color scheme to mesh
+- [x] Ensure it stays in backdrop (behind content)
+- [x] Make it subtle and fade in/out organically
+
