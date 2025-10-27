@@ -66,7 +66,7 @@ export default function Home() {
   const ctaSection = useInView();
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative" style={{ position: 'relative', zIndex: 1 }}>
       <WavingFabric />
       {/* Hero Section */}
       <motion.section 

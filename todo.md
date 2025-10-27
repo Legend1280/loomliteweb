@@ -55,3 +55,11 @@
 ## Bug Fixes
 - [x] Increase visibility of fabric background effect (currently too subtle/invisible)
 
+
+
+## Geometric Fabric Redesign
+- [x] Create visible geometric fabric with nodes and connecting lines
+- [x] Make nodes yellow colored and clearly visible
+- [x] Add flowing animation to the fabric
+- [x] Ensure it's apparent in the background
+
