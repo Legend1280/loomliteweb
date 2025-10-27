@@ -28,17 +28,17 @@ export default function WavingFabric() {
 
     const createDiagonalStream = (startX: number, startY: number, length: number, angle: number) => {
       const nodes: Node[] = [];
-      const nodeCount = 12;
+      const nodeCount = 18; // More nodes for longer streams
       const spacing = length / nodeCount;
 
       for (let i = 0; i < nodeCount; i++) {
-        const x = startX + Math.cos(angle) * spacing * i + (Math.random() - 0.5) * 50;
-        const y = startY + Math.sin(angle) * spacing * i + (Math.random() - 0.5) * 50;
+        const x = startX + Math.cos(angle) * spacing * i + (Math.random() - 0.5) * 40;
+        const y = startY + Math.sin(angle) * spacing * i + (Math.random() - 0.5) * 40;
         
         nodes.push({
           x,
           y,
-          size: Math.random() * 4 + 3,
+          size: Math.random() * 3 + 2.5,
           baseX: x,
           baseY: y,
         });
@@ -51,15 +51,25 @@ export default function WavingFabric() {
       const w = canvas.width;
       const h = canvas.height;
       
-      // Create 3 visible diagonal streams
-      // Stream 1: Upper right to lower left
-      streams.push(createDiagonalStream(w * 0.7, h * 0.2, 600, Math.PI * 0.75));
+      // Only 2 streams positioned in negative space
       
-      // Stream 2: Left to right middle
-      streams.push(createDiagonalStream(w * 0.15, h * 0.5, 700, Math.PI * 0.2));
+      // Stream 1: Bottom-right area, 30% down from top, flowing diagonally off-screen
+      // Positioned in the negative space on the right side
+      streams.push(createDiagonalStream(
+        w * 0.65,           // Start 65% from left (right side)
+        h * 0.3,            // 30% down from top
+        900,                // Longer stream
+        Math.PI * 0.35      // Diagonal angle flowing down-right
+      ));
       
-      // Stream 3: Upper left to lower right
-      streams.push(createDiagonalStream(w * 0.3, h * 0.3, 500, Math.PI * 0.4));
+      // Stream 2: Left-middle area, flowing diagonally across negative space
+      // Positioned to flow through left side negative space
+      streams.push(createDiagonalStream(
+        w * 0.05,           // Start near left edge
+        h * 0.55,           // Middle-lower area
+        800,                // Long stream
+        Math.PI * 0.15      // Gentle diagonal flowing right
+      ));
     };
 
     resizeCanvas();
@@ -69,14 +79,14 @@ export default function WavingFabric() {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      time += 0.015;
+      time += 0.012;
 
       streams.forEach((stream) => {
-        // Update node positions with wave
+        // Update node positions with subtle wave
         stream.forEach((node, i) => {
-          const wave = Math.sin(i * 0.4 + time) * 20;
+          const wave = Math.sin(i * 0.35 + time) * 18;
           node.x = node.baseX + wave;
-          node.y = node.baseY + Math.cos(i * 0.3 + time) * 15;
+          node.y = node.baseY + Math.cos(i * 0.25 + time) * 12;
         });
 
         // Draw connections between adjacent nodes
@@ -87,8 +97,8 @@ export default function WavingFabric() {
           ctx.beginPath();
           ctx.moveTo(node.x, node.y);
           ctx.lineTo(nextNode.x, nextNode.y);
-          ctx.strokeStyle = `rgba(252, 211, 77, 0.4)`;
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = `rgba(252, 211, 77, 0.35)`;
+          ctx.lineWidth = 1.5;
           ctx.stroke();
 
           // Connect to nearby nodes for triangulation
@@ -98,8 +108,8 @@ export default function WavingFabric() {
             const dy = nearNode.y - node.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < 150) {
-              const opacity = (1 - distance / 150) * 0.25;
+            if (distance < 140) {
+              const opacity = (1 - distance / 140) * 0.2;
               ctx.beginPath();
               ctx.moveTo(node.x, node.y);
               ctx.lineTo(nearNode.x, nearNode.y);
@@ -115,15 +125,15 @@ export default function WavingFabric() {
           // Main node
           ctx.beginPath();
           ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(252, 211, 77, 0.9)`;
+          ctx.fillStyle = `rgba(252, 211, 77, 0.8)`;
           ctx.fill();
 
           // Larger nodes get rings
-          if (node.size > 5) {
+          if (node.size > 4) {
             ctx.beginPath();
-            ctx.arc(node.x, node.y, node.size + 5, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(252, 211, 77, 0.4)`;
-            ctx.lineWidth = 2;
+            ctx.arc(node.x, node.y, node.size + 4, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(252, 211, 77, 0.35)`;
+            ctx.lineWidth = 1.5;
             ctx.stroke();
           }
         });
@@ -142,7 +152,7 @@ export default function WavingFabric() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none opacity-40"
+      className="fixed inset-0 pointer-events-none opacity-35"
       style={{ zIndex: 0 }}
     />
   );

@@ -86,3 +86,13 @@
 ## Bugs
 - [x] Fabric streams not visible - debug and fix rendering issue
 
+
+
+## Fabric Positioning Refinement
+- [x] Reduce to only 2 fabric streams
+- [x] Position streams in identified negative space areas
+- [x] Move first stream 30% down and to bottom-right of initial viewport
+- [x] Make streams off-center and less intrusive
+- [x] Ensure streams flow off the page edges
+- [x] Increase node count for longer, more visible streams
+
